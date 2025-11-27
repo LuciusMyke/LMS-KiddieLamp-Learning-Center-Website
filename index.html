@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KiddieLamp Learning Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <style>
+        /* Custom Configuration for Colors (Matching your CSS variables) */
+        :root {
+            --primary-color: #5d4a94; /* Primary Purple */
+            --secondary-color: #3a2b5e; /* Dark Purple */
+            --dark-bg-color: #3a4768; /* Navy Blue Footer */
+            --violet-hero-bg: #4f46e5; /* New violet for hero background, can be adjusted */
+        }
+        
+        /* Apply custom colors to Tailwind */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'kl-primary': 'var(--primary-color)',
+                        'kl-secondary': 'var(--secondary-color)',
+                        'kl-dark-bg': 'var(--dark-bg-color)',
+                        'kl-light-bg': '#f7f7f7',
+                        'kl-violet': 'var(--violet-hero-bg)', /* Added for the hero section */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+        
+        /* --- General Overrides --- */
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* --- Navigation Custom Styles for Mobile --- */
+        /* Hides the desktop nav by default on small screens */
+        .main-nav { 
+            display: none; 
+            /* Added for smooth scrolling when jumping to sections */
+            scroll-behavior: smooth;
+        }
+        
+        /* Makes the navigation block visible when the hamburger is clicked */
+        .main-nav.active-nav {
+            display: block;
+            position: absolute; /* Allows it to flow over content */
+            top: 68px; /* Height of the header */
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 40; /* Lower than header z-50 */
+        }
+        
+        /* Removes default list styling */
+        .main-nav ul { list-style: none; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .main-nav ul { 
+                flex-direction: column; 
+                gap: 0;
+                padding: 0; /* Remove padding */
+            }
+            .main-nav li { 
+                width: 100%; 
+                border-bottom: 1px solid #eee; 
+            }
+            .main-nav li:last-child {
+                border-bottom: none; /* Clean up last item */
+            }
+            .main-nav a { 
+                padding: 12px 15px; 
+                width: 100%; 
+                display: block;
+                border-bottom: none !important; 
+            }
+            
+            /* Mobile Active Nav Style (Box) */
+            .main-nav a.active { 
+                background-color: var(--kl-light-bg); 
+                color: var(--kl-primary);
+                border-left: 4px solid var(--primary-color) !important; /* Visual indicator */
+                font-weight: bold;
+            }
+            
+            /* Mobile Dropdown */
+            .dropdown-menu { 
+                position: relative; 
+                width: 100%;
+                background-color: #fff;
+                box-shadow: none;
+                padding: 0;
+                display: none; /* Hidden by default on mobile */
+                border-top: 1px solid #eee;
+            }
+            /* Show dropdown menu when 'show' class is added by JS */
+            .dropdown-menu.show {
+                display: block !important;
+            }
+
+            .dropdown-menu li a {
+                color: #555;
+                background-color: #fafafa;
+                padding-left: 35px;
+                border-bottom: 1px dashed #eee;
+            }
+            .dropdown-menu li a:hover {
+                background-color: #eee;
+                color: var(--primary-color);
+            }
+            /* Ensure dropdown item does not have border on mobile */
+            .dropdown-item {
+                border-bottom: 1px solid #eee; 
+            }
+            .dropdown-item:last-child {
+                border-bottom: none;
+            }
+        }
+        /* Desktop Dropdown Styles */
+        @media (min-width: 769px) {
+            .dropdown:hover .dropdown-menu {
+                display: block;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                background-color: white;
+                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+                z-index: 50;
+                min-width: 160px;
+                padding: 0;
+                margin-top: 2px;
+                border-radius: 4px;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            .dropdown-menu a {
+                padding: 10px 15px;
+                white-space: nowrap;
+                color: #333;
+                text-align: left;
+            }
+            .dropdown-menu a:hover {
+                background-color: #f1f1f1;
+                color: var(--primary-color);
+            }
+            .dropdown:hover .dropdown-btn {
+                color: var(--primary-color);
+                border-bottom-color: var(--primary-color);
+            }
+        }
+
+        /* --- Slider Styles --- */
+        .slideshow-container, .summer-slider { position: relative; max-width: 600px; margin: auto; }
+        .slide { display: none; }
+        .slide img { width: 100%; height: 350px; object-fit: cover; }
+        /* Dot styling for sliders */
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 2px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background-color: var(--kl-primary);
+        }
+        /* Fade animation for slides */
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes fade {
+            from {opacity: .4} 
+            to {opacity: 1}
+        }
+
+.main-footer {
+    background-color: var(--dark-bg-color);
+    color: var(--light-text);
+    text-align: center;
+    padding: 40px 5%;
+    margin-top: 40px;
+}
+
+.footer-content h3 {
+    color: var(--light-text);
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.footer-content .copyright {
+    margin-top: 20px;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.footer-content .tagline {
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.7;
+}
+        
+
+
+
+    </style>
+</head>
+<body class="bg-kl-light-bg font-sans text-gray-800">
+
+    <header class="main-header sticky top-0 z-50 bg-white shadow-lg flex justify-center">
+        <div class="w-full max-w-7xl flex justify-between items-center p-4 md:px-8">
+            <div class="logo-container flex items-center flex-wrap">
+                <img src="./assets/logo.jfif" alt="KiddleLamp Learning Center Logo" class="w-12 h-12 rounded-full shadow-md"
+                    onerror="this.onerror=null; this.src='https://placehold.co/48x48/5d4a94/ffffff?text=KL';"> 
+                <span class="site-title text-base font-extrabold text-kl-secondary ml-3 leading-tight">
+                    KiddieLamp <br> Learning Center
+                </span>
+            </div>
+
+            <div class="hamburger md:hidden cursor-pointer text-xl text-kl-secondary" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <nav class="main-nav md:block" id="nav-links">
+                <ul class="flex md:space-x-8 lg:space-x-12 p-0">
+                    <li><a href="index.html" class="active text-kl-primary font-semibold flex items-center py-2 border-b-2 border-kl-primary transition duration-200">
+                        <i class="fas fa-home mr-1"></i> Home
+                    </a></li>
+                    <li><a href="aboutus.html" class="text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                        <i class="fas fa-info-circle mr-1"></i> About Us
+                    </a></li>
+                    
+                
+                    
+                    <li><a href="contact.html" class="text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                        <i class="fas fa-envelope mr-1"></i> Contact
+                    </a></li>
+                        <li class="dropdown relative">
+                           <a href="#" class="dropdown-btn dropdown-toggle text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                            </i> More <i class="fas fa-caret-down ml-2 text-sm"></i>
+                        </a>
+                        <ul class="dropdown-menu absolute hidden list-none">
+                            
+                            <li><a href="event.html" class="dropdown-item">Event</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-8">
+        
+        <section id="home" class="hero-section flex flex-col md:flex-row items-center justify-between my-10 md:my-16 gap-8 bg-kl-violet  p-6 rounded-2xl shadow-xl">
+            <div class="hero-text text-center md:text-left flex-1 p-4 md:p-0">
+                <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 leading-snug">
+                    Bright Minds, <br class="hidden sm:inline"> Bright Future
+                </h1>
+                <!-- UPDATED: Removed text-gray-200 to inherit brighter text-white from parent -->
+                <p class="text-lg">Where young learners discover their love for learning!</p>
+                <!-- Button text color (text-kl-primary) remains the same for high contrast on yellow -->
+              <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mt-6">
+  <!-- Enroll Now Button -->
+  <button onclick="window.location.href='https://docs.google.com/forms/d/e/1FAIpQLSf5kXxRoOQc8f5jOvm2PmNQaQopMfCekzPD3lEdj0rVt2ybUg/viewform';" 
+          class="bg-yellow-400 text-kl-primary font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-300 transition duration-300 flex items-center justify-center">
+    Enroll Now <i class="fas fa-arrow-right ml-2"></i>
+  </button>
+
+  <!-- Download App Button (same style as Enroll) -->
+  <button onclick="window.location.href='https://download1322.mediafire.com/34fu0h0cnslgeoX-mGpE0wwZZOhY4op1o6lnCA7DVr9E5DBpStxJk_LjciT6JanpDJCF_Q2LMq4d5vKxC-wyVtod0Bxcq0An5HTwRPnZCPWp9w8STPQO1DgAC7aDPi1pfmjeUF1XLKMnqU2ECcMyjtg_APVs-itYqzXLy_1JeGnA/iynsg2sxba0g75g/KiddieLampLearningCenter.apk';" 
+          class="bg-yellow-400 text-kl-primary font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-300 transition duration-300 flex items-center justify-center">
+    <i class="fas fa-download mr-2"></i> Download App
+  </button>
+</div>
+
+
+            </div>
+            <div class="hero-illustration slideshow-container flex-1 max-w-md w-full relative">
+                <div class="slide fade">
+                    <img src="./assets/ka1.jpg" alt="Kids 1" class="rounded-xl shadow-2xl"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x350/5d4a94/ffffff?text=HERO+SLIDE+1';">
+                </div>
+                <div class="slide fade">
+                    <img src="./assets/ka2.jpg" alt="Kids 2" class="rounded-xl shadow-2xl"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x350/5d4a94/ffffff?text=HERO+SLIDE+2';">
+                </div>
+                <div class="slide fade">
+                    <img src="./assets/ka3.jpg" alt="Kids 3" class="rounded-xl shadow-2xl"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x350/5d4a94/ffffff?text=HERO+SLIDE+3';">
+                </div>
+                <div class="slide fade">
+                    <img src="./assets/ka4.jpg" alt="Kids 4" class="rounded-xl shadow-2xl"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x350/5d4a94/ffffff?text=HERO+SLIDE+4';">
+                </div> 
+                <div class="slide fade">
+                    <img src="./assets/ka5.jpg" alt="Kids 5" class="rounded-xl shadow-2xl"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x350/5d4a94/ffffff?text=HERO+SLIDE+5';">
+                </div>
+                
+                <a class="prev absolute top-1/2 left-0 transform -translate-y-1/2 bg-black bg-opacity-40 text-white p-3 rounded-r-lg transition duration-300" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next absolute top-1/2 right-0 transform -translate-y-1/2 bg-black bg-opacity-40 text-white p-3 rounded-l-lg transition duration-300" onclick="plusSlides(1)">&#10095;</a>
+                
+                <div class="dots-container text-center mt-3">
+                    <span class="dot" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                    <span class="dot" onclick="currentSlide(5)"></span>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="my-16">
+             </section>
+
+        <section id="prek" class="my-16"></section>
+        <section id="stem" class="my-16"></section>
+        <section id="arts" class="my-16"></section>
+        
+        <section class="summer-class flex flex-col md:flex-row items-center justify-between my-16 gap-8 bg-kl-light-bg p-8 rounded-2xl shadow-2xl border-b-4 border-kl-primary/50">
+            <div class="summer-slider flex-1 max-w-md w-full relative order-2 md:order-1">
+                <div class="slides">
+                    <div class="slide fade">
+                        <img src="./assets/summer1.jpg" alt="Summer Class 1" class="rounded-xl shadow-lg"
+                                onerror="this.onerror=null; this.src='https://placehold.co/600x350/3a2b5e/ffffff?text=SUMMER+SLIDE+1';">
+                    </div>
+                    <div class="slide fade">
+                        <img src="./assets/summer2.jpg" alt="Summer Class 2" class="rounded-xl shadow-lg"
+                                onerror="this.onerror=null; this.src='https://placehold.co/600x350/3a2b5e/ffffff?text=SUMMER+SLIDE+2';">
+                    </div>
+                    <div class="slide fade">
+                        <img src="./assets/summer3.jpg" alt="Summer Class 3" class="rounded-xl shadow-lg"
+                                onerror="this.onerror=null; this.src='https://placehold.co/600x350/3a2b5e/ffffff?text=SUMMER+SLIDE+3';">
+                    </div>
+                </div>
+                <a class="prev absolute top-1/2 left-0 transform -translate-y-1/2 bg-black bg-opacity-40 text-white p-3 rounded-r-lg transition duration-300" onclick="plusSummerSlides(-1)">&#10094;</a>
+                <a class="next absolute top-1/2 right-0 transform -translate-y-1/2 bg-black bg-opacity-40 text-white p-3 rounded-l-lg transition duration-300" onclick="plusSummerSlides(1)">&#10095;</a>
+                
+                <div class="dots text-center mt-3">
+                    <span class="dot" onclick="currentSummerSlide(1)"></span>
+                    <span class="dot" onclick="currentSummerSlide(2)"></span>
+                    <span class="dot" onclick="currentSummerSlide(3)"></span>
+                </div>
+            </div>
+            
+            <div class="summer-text text-center md:text-left flex-1 p-4 order-1 md:order-2">
+                <h2 class="text-3xl font-bold text-kl-secondary mb-4">Summer Classes</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    Engage your child in fun and educational summer experiences with activities that nurture creativity, learning, and social skills. Our summer programs are designed for children from K1 to Grade 5 to ensure a memorable and enriching learning journey.
+                </p>
+                <button class="mt-6 border-2 border-kl-primary text-kl-primary font-bold py-2 px-6 rounded-full hover:bg-kl-primary hover:text-white transition duration-300">
+                    View Programs <i class="fas fa-calendar-alt ml-2"></i>
+                </button>
+            </div>
+        </section>
+        
+        <section class="py-16 bg-indigo-50 rounded-2xl shadow-lg mb-16 px-6">
+            <h2 class="text-4xl font-extrabold text-center mb-12 text-kl-secondary border-b-4 border-kl-primary inline-block pb-1">
+                ROPRISA Talent Show
+            </h2>
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-10">
+                <div class="lg:w-1/3 p-6 bg-white rounded-xl shadow-2xl h-full flex flex-col justify-center border-l-4 border-kl-secondary">
+                    <p class="text-lg text-gray-700 mb-6 font-semibold">
+                        KiddieLamp proudly participates in the **ROPRISA (Regional Organization of Private Schools)** Talent Show, a vibrant showcase where students from various private schools compete and collaborate. 
+                    </p>
+                    <p class="text-md text-gray-600 italic">
+                        It’s an incredible opportunity for our young stars to display their talents in singing, dancing, public speaking, and the arts, fostering confidence and healthy competition in a supportive environment. We celebrate every achievement!
+                    </p>
+                    <a href="event.html" class="mt-6 text-kl-primary hover:text-kl-secondary font-bold transition duration-300 flex items-center">
+                        See Past Winners <i class="fas fa-chevron-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+                
+                <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="roprisa-card relative overflow-hidden rounded-xl shadow-xl transition transform hover:scale-[1.02] duration-300 border-2 border-kl-primary/50">
+                        <img src="./assets/roprisa1.jpg" alt="ROPRISA Talent Show Image 1" class="w-full h-full object-cover aspect-[4/3]"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/5d4a94/ffffff?text=ROPRISA+1';">
+                        <div class="absolute inset-0 bg-kl-primary bg-opacity-30 flex items-end p-4">
+                            <span class="text-white font-bold text-lg">Dance</span>
+                        </div>
+                    </div>
+                    <div class="roprisa-card relative overflow-hidden rounded-xl shadow-xl transition transform hover:scale-[1.02] duration-300 border-2 border-kl-primary/50">
+                        <img src="./assets/roprisa2.jpg" alt="ROPRISA Talent Show Image 2" class="w-full h-full object-cover aspect-[4/3]"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/3a2b5e/ffffff?text=ROPRISA+2';">
+                        <div class="absolute inset-0 bg-kl-primary bg-opacity-30 flex items-end p-4">
+                            <span class="text-white font-bold text-lg">Music</span>
+                        </div>
+                    </div>
+                    <div class="roprisa-card relative overflow-hidden rounded-xl shadow-xl transition transform hover:scale-[1.02] duration-300 border-2 border-kl-primary/50">
+                        <img src="./assets/roprisa3.jpg" alt="ROPRISA Talent Show Image 3" class="w-full h-full object-cover aspect-[4/3]"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/5d4a94/ffffff?text=ROPRISA+3';">
+                        <div class="absolute inset-0 bg-kl-primary bg-opacity-30 flex items-end p-4">
+                            <span class="text-white font-bold text-lg">Oratory</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-kl-light-bg rounded-3xl shadow-inner mb-16 border-t-4 border-kl-secondary/30">
+            <h2 class="text-4xl font-extrabold text-center mb-6 text-kl-secondary">
+                Safety & Compliance
+            </h2>
+            <p class="text-center text-lg text-gray-700 max-w-3xl mx-auto mb-12">
+                We are committed to maintaining the highest standards of safety, quality, and government compliance. Our facilities are regularly assessed by DEPED and the Bureau of Fire Protection (BFP) to ensure a secure and ideal learning environment.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 px-4 md:px-8">
+                <div class="lg:col-span-2 flex flex-col justify-center p-8 bg-kl-secondary text-white rounded-xl shadow-2xl transition transform hover:shadow-3xl">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-check-circle text-4xl text-green-400 mr-3"></i>
+                        <h3 class="text-2xl font-bold">DEPED Certified</h3>
+                    </div>
+                    <p class="text-sm opacity-90 mb-6">
+                        Fully compliant with the Department of Education's standards for curriculum, facilities, and teaching staff.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-fire-extinguisher text-4xl text-red-400 mr-3"></i>
+                        <h3 class="text-2xl font-bold">BFP Approved</h3>
+                    </div>
+                    <p class="text-sm opacity-90">
+                        All safety equipment, egress points, and procedures meet strict fire safety regulations. Your child's well-being is our top priority.
+                    </p>
+                </div>
+
+                <div class="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div class="relative overflow-hidden rounded-lg shadow-md aspect-w-4 aspect-h-3">
+                        <img src="./assets/difi1.jpg" alt="DEPED Inspection 1" class="w-full h-full object-cover transition duration-300 hover:opacity-90"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/3a2b5e/ffffff?text=DIFI+1';">
+                    </div>
+                    <div class="relative overflow-hidden rounded-lg shadow-md aspect-w-4 aspect-h-3">
+                        <img src="./assets/difi2.jpg" alt="Fire Inspection 2" class="w-full h-full object-cover transition duration-300 hover:opacity-90"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/5d4a94/ffffff?text=DIFI+2';">
+                    </div>
+                    <div class="relative overflow-hidden rounded-lg shadow-md hidden sm:block aspect-w-4 aspect-h-3">
+                        <img src="./assets/difi3.jpg" alt="Safety Drills 3" class="w-full h-full object-cover transition duration-300 hover:opacity-90"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/3a2b5e/ffffff?text=DIFI+3';">
+                    </div>
+                    <div class="relative overflow-hidden rounded-lg shadow-md aspect-w-4 aspect-h-3">
+                        <img src="./assets/difi4.jpg" alt="School Permit 4" class="w-full h-full object-cover transition duration-300 hover:opacity-90"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/5d4a94/ffffff?text=DIFI+4';">
+                    </div>
+                    <div class="relative overflow-hidden rounded-lg shadow-md hidden sm:block aspect-w-4 aspect-h-3">
+                        <img src="./assets/difi5.jpg" alt="Compliance Doc 5" class="w-full h-full object-cover transition duration-300 hover:opacity-90"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/3a2b5e/ffffff?text=DIFI+5';">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact" class="my-16">
+             </section>
+        
+    </main>
+
+    <footer class="main-footer bg-kl-dark-bg w-full text-white text-center py-10 px-4">
+        <div class="footer-content max-w-7xl mx-auto">
+            <h3 class="text-2xl font-bold mb-3">KiddieLamp Learning Center</h3>
+            <p class="text-sm opacity-90 mb-1">Inspiring young minds with creativity, knowledge, and joy in learning.</p>
+            <p class="tagline text-xs italic opacity-70 mb-4">Empowering tomorrow’s leaders today!</p>
+            <p class="copyright text-xs opacity-60">© 2025 KiddieLamp Learning Center. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const dropdownToggle = document.querySelector('.dropdown-toggle');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const allNavLinks = document.querySelectorAll('.main-nav a');
+
+        // Function to toggle the main mobile menu
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active-nav');
+            // Ensure dropdown is closed when main nav is opened/closed
+            if (!navLinks.classList.contains('active-nav')) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+        
+        // Function to toggle the mobile dropdown menu
+        if (dropdownToggle && dropdownMenu) {
+            dropdownToggle.addEventListener('click', function(e) {
+                // Check if we are on a mobile screen (less than 768px)
+                if (window.innerWidth < 769) {
+                    e.preventDefault();
+                    dropdownMenu.classList.toggle('show');
+                }
+            });
+        }
+        
+        // Close nav menu after clicking a link (on mobile)
+        allNavLinks.forEach(link => {
+             link.addEventListener('click', function() {
+                 if (window.innerWidth < 769) {
+                     // Check if the link is NOT the main dropdown toggle itself
+                     if (!this.classList.contains('dropdown-toggle')) {
+                          navLinks.classList.remove('active-nav');
+                          dropdownMenu.classList.remove('show');
+                     }
+                 }
+             });
+        });
+
+
+        // --- Slider Logic ---
+
+        // Hero Slider
+        let slideIndex = 1;
+        showSlides(slideIndex);
+        
+        function plusSlides(n) { showSlides(slideIndex += n); }
+        function currentSlide(n) { showSlides(slideIndex = n); }
+        
+        function showSlides(n) {
+            let slides = document.querySelectorAll(".hero-illustration .slide");
+            let dots = document.querySelectorAll(".dots-container .dot");
+            if (n > slides.length) {slideIndex = 1}      
+            if (n < 1) {slideIndex = slides.length}
+            slides.forEach(s => s.style.display = "none");
+            dots.forEach(d => d.className = d.className.replace(" active", ""));
+            slides[slideIndex-1].style.display = "block";  
+            dots[slideIndex-1].className += " active";
+        }
+
+        // Summer Slider
+        let summerSlideIndex = 1;
+        showSummerSlides(summerSlideIndex);
+        
+        function plusSummerSlides(n) { showSummerSlides(summerSlideIndex += n); }
+        function currentSummerSlide(n) { showSummerSlides(summerSlideIndex = n); }
+        
+        function showSummerSlides(n) {
+            let slides = document.querySelectorAll(".summer-slider .slides .slide");
+            let dots = document.querySelectorAll(".summer-slider .dots .dot");
+            if (n > slides.length) {summerSlideIndex = 1}      
+            if (n < 1) {summerSlideIndex = slides.length}
+            slides.forEach(s => s.style.display = "none");
+            dots.forEach(d => d.className = d.className.replace(" active", ""));
+            slides[summerSlideIndex-1].style.display = "block";  
+            dots[summerSlideIndex-1].className += " active";
+        }
+        
+        // Auto-advance the main slider for visual appeal
+        setInterval(() => {
+            plusSlides(1);
+        }, 5000); // Change image every 5 seconds
+
+    </script>
+</body>
+</html>

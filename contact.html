@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us | KiddleLamp Learning Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <style>
+        /* Custom Configuration for Colors (Matching previous files) */
+        :root {
+            --primary-color: #5d4a94; /* Primary Purple */
+            --secondary-color: #3a2b5e; /* Dark Purple */
+            --dark-bg-color: #3a4768; /* Navy Blue Footer */
+        }
+        
+        /* Apply custom colors to Tailwind */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'kl-primary': 'var(--primary-color)',
+                        'kl-secondary': 'var(--secondary-color)',
+                        'kl-dark-bg': 'var(--dark-bg-color)',
+                        'kl-light-bg': '#f7f7f7',
+                        'kl-accent-green': '#4CAF50',
+                        'kl-accent-blue': '#2196F3',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+        
+        /* --- General Overrides --- */
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* --- Navigation Custom Styles for Mobile --- */
+        .main-nav { display: none; }
+        .main-nav.active-nav {
+            display: block;
+            position: absolute;
+            top: 68px; 
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 40;
+        }
+        .main-nav ul { list-style: none; }
+        
+        /* Styling for the active link (Contact) */
+        .main-nav a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .main-nav ul { 
+                flex-direction: column; 
+                gap: 0;
+                padding: 0;
+            }
+            .main-nav li { 
+                width: 100%; 
+                border-bottom: 1px solid #eee; 
+            }
+            .main-nav a { 
+                padding: 12px 15px; 
+                width: 100%; 
+                display: block;
+                border-bottom: none !important; 
+            }
+            
+            /* Mobile Active Nav Style */
+            .main-nav a.active { 
+                background-color: var(--kl-light-bg); 
+                color: var(--kl-primary);
+                border-left: 4px solid var(--primary-color) !important;
+                font-weight: bold;
+            }
+            
+            /* Mobile Dropdown (Ensure it works but is not active) */
+            .dropdown-menu { 
+                position: relative; 
+                width: 100%;
+                background-color: #fff;
+                box-shadow: none;
+                padding: 0;
+            }
+            .dropdown-menu li a {
+                color: #555;
+                background-color: #fafafa;
+                padding-left: 35px;
+                border-bottom: 1px dashed #eee;
+            }
+            .dropdown-menu li a:hover {
+                background-color: #eee;
+                color: var(--primary-color);
+            }
+            .dropdown:hover .dropdown-menu, .dropdown-menu.show { 
+                display: block !important; 
+                opacity: 1 !important; 
+                transform: none !important; 
+            }
+        }
+        .main-footer {
+    background-color: var(--dark-bg-color);
+    color: var(--light-text);
+    text-align: center;
+    padding: 40px 5%;
+    margin-top: 40px;
+}
+
+.footer-content h3 {
+    color: var(--light-text);
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.footer-content .copyright {
+    margin-top: 20px;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.footer-content .tagline {
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.7;
+}
+  /* --- General Overrides --- */
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* --- Navigation Custom Styles for Mobile --- */
+        /* Hides the desktop nav by default on small screens */
+        .main-nav { 
+            display: none; 
+            /* Added for smooth scrolling when jumping to sections */
+            scroll-behavior: smooth;
+        }
+        
+        /* Makes the navigation block visible when the hamburger is clicked */
+        .main-nav.active-nav {
+            display: block;
+            position: absolute; /* Allows it to flow over content */
+            top: 68px; /* Height of the header */
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 40; /* Lower than header z-50 */
+        }
+        
+        /* Removes default list styling */
+        .main-nav ul { list-style: none; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .main-nav ul { 
+                flex-direction: column; 
+                gap: 0;
+                padding: 0; /* Remove padding */
+            }
+            .main-nav li { 
+                width: 100%; 
+                border-bottom: 1px solid #eee; 
+            }
+            .main-nav li:last-child {
+                border-bottom: none; /* Clean up last item */
+            }
+            .main-nav a { 
+                padding: 12px 15px; 
+                width: 100%; 
+                display: block;
+                border-bottom: none !important; 
+            }
+            
+            /* Mobile Active Nav Style (Box) */
+            .main-nav a.active { 
+                background-color: var(--kl-light-bg); 
+                color: var(--kl-primary);
+                border-left: 4px solid var(--primary-color) !important; /* Visual indicator */
+                font-weight: bold;
+            }
+            
+            /* Mobile Dropdown */
+            .dropdown-menu { 
+                position: relative; 
+                width: 100%;
+                background-color: #fff;
+                box-shadow: none;
+                padding: 0;
+                display: none; /* Hidden by default on mobile */
+                border-top: 1px solid #eee;
+            }
+            /* Show dropdown menu when 'show' class is added by JS */
+            .dropdown-menu.show {
+                display: block !important;
+            }
+
+            .dropdown-menu li a {
+                color: #555;
+                background-color: #fafafa;
+                padding-left: 35px;
+                border-bottom: 1px dashed #eee;
+            }
+            .dropdown-menu li a:hover {
+                background-color: #eee;
+                color: var(--primary-color);
+            }
+            /* Ensure dropdown item does not have border on mobile */
+            .dropdown-item {
+                border-bottom: 1px solid #eee; 
+            }
+            .dropdown-item:last-child {
+                border-bottom: none;
+            }
+        }
+        /* Desktop Dropdown Styles */
+        @media (min-width: 769px) {
+            .dropdown:hover .dropdown-menu {
+                display: block;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                background-color: white;
+                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+                z-index: 50;
+                min-width: 160px;
+                padding: 0;
+                margin-top: 2px;
+                border-radius: 4px;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            .dropdown-menu a {
+                padding: 10px 15px;
+                white-space: nowrap;
+                color: #333;
+                text-align: left;
+            }
+            .dropdown-menu a:hover {
+                background-color: #f1f1f1;
+                color: var(--primary-color);
+            }
+            .dropdown:hover .dropdown-btn {
+                color: var(--primary-color);
+                border-bottom-color: var(--primary-color);
+            }
+        }
+
+    </style>
+</head>
+<body class="bg-kl-light-bg font-sans text-gray-800">
+
+    <header class="main-header sticky top-0 z-50 bg-white shadow-lg flex justify-center">
+        <div class="w-full max-w-7xl flex justify-between items-center p-4 md:px-8">
+            <div class="logo-container flex items-center flex-wrap">
+                <!-- Using a standard placeholder image to avoid broken links -->
+                <img src="./assets/logo.jfif" alt="KiddleLamp Learning Center Logo" class="w-12 h-12 rounded-full shadow-md"> 
+                <span class="site-title text-base font-extrabold text-kl-secondary ml-3 leading-tight">
+                    KiddleLamp <br> Learning Center
+                </span>
+            </div>
+
+            <div class="hamburger md:hidden cursor-pointer text-xl text-kl-secondary" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <nav class="main-nav hidden md:block" id="nav-links">
+                <ul class="flex md:space-x-8 lg:space-x-12">
+                    <!-- Home is NOT active -->
+                    <li><a href="index.html" class="text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                        <i class="fas fa-home mr-1"></i> Home
+                    </a></li>
+                    <!-- About Us is NOT active -->
+                    <li><a href="aboutus.html" class="text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                        <i class="fas fa-info-circle mr-1"></i> About Us
+                    </a></li>
+                    <!-- Contact is ACTIVE -->
+                    <li><a href="contact.html" class="active text-kl-primary font-semibold flex items-center py-2 border-b-2 border-kl-primary transition duration-200">
+                        <i class="fas fa-envelope mr-1"></i> Contact
+                    </a></li>
+                    <!-- More (Dropdown) is NOT active -->
+                    <li class="dropdown relative">
+                        <a href="#" class="dropdown-toggle text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                            <i class="fas fa-ellipsis-h mr-1"></i> More <i class="fas fa-caret-down ml-1 text-sm"></i>
+                        </a>
+                        <ul class="dropdown-menu absolute hidden min-w-[150px] bg-kl-secondary rounded-lg shadow-xl overflow-hidden py-1">
+                            <li><a href="event.html" class="text-white hover:bg-kl-primary px-4 py-2 block transition duration-200">Events</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-12">
+        
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold text-kl-secondary">Get In Touch</h1>
+            <p class="text-xl text-gray-500 mt-3 max-w-2xl mx-auto">
+                We'd love to hear from you! Reach out to us through any of the channels below for enrollment inquiries, questions, or concerns.
+            </p>
+        </div>
+
+        <!-- CONTACT CARDS SECTION -->
+        <section id="contact-info" class="grid md:grid-cols-3 gap-8 mb-16">
+            
+            <!-- Card 1: Email (Gmail) -->
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-kl-accent-blue flex flex-col items-center text-center">
+                <i class="fas fa-envelope text-5xl text-kl-accent-blue mb-4"></i>
+                <h2 class="text-2xl font-bold text-kl-secondary mb-2">Email Address</h2>
+                <p class="text-lg font-medium text-gray-700">
+                  kiddielapmlearningcenter2012@gmail.com 
+                </p>
+                <a href="kiddielapmlearningcenter2012@gmail.com" class="mt-3 inline-block text-kl-primary font-semibold hover:underline">
+                    Send a Message
+                </a>
+            </div>
+
+            <!-- Card 2: Contact Number -->
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-kl-primary flex flex-col items-center text-center">
+                <i class="fas fa-phone-alt text-5xl text-kl-primary mb-4"></i>
+                <h2 class="text-2xl font-bold text-kl-secondary mb-2">Contact Number</h2>
+                <p class="text-lg font-medium text-gray-700">
+                    09196095540 
+                </p>
+                <a href="tel:+639196095540" class="mt-3 inline-block text-kl-primary font-semibold hover:underline">
+                    Call Us Now
+                </a>
+            </div>
+
+            <!-- Card 3: Social Media (Facebook) -->
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-blue-600 flex flex-col items-center text-center">
+                <i class="fab fa-facebook-f text-5xl text-blue-600 mb-4"></i>
+                <h2 class="text-2xl font-bold text-kl-secondary mb-2">Facebook Page</h2>
+                <p class="text-lg font-medium text-gray-700">
+                    @KiddleLampLearningCenter
+                </p>
+                <a href="https://www.facebook.com/Kiddielamplearningcenter" target="_blank" class="mt-3 inline-block text-kl-primary font-semibold hover:underline">
+                    Visit Our Page
+                </a>
+            </div>
+        </section>
+
+        <!-- GOOGLE MAP EMBED SECTION -->
+        <section id="location" class="mb-16">
+            <h2 class="text-3xl font-extrabold text-kl-secondary mb-6 text-center">Our School Location</h2>
+            <div class="relative w-full overflow-hidden rounded-xl shadow-2xl border-4 border-kl-primary/20" style="height: 500px;">
+                <!-- 
+                    IMPORTANT: Replace the iframe 'src' URL below with your school's actual Google Maps embed code.
+                    You can easily generate a new one from Google Maps by clicking 'Share' -> 'Embed a map'.
+                -->
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.2893755795703!2d121.14453169999999!3d14.75272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397a4cb301f1889%3A0x35de06a4dbc2c9ef!2sKiddielamp%20Learning%20Center!5e0!3m2!1sen!2sph!4v1761797138391!5m2!1sen!2sph" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    class="absolute top-0 left-0"
+                ></iframe>
+                
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-kl-secondary text-white px-4 py-2 rounded-lg shadow-xl text-sm font-medium">
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer class="main-footer bg-kl-dark-bg w-full text-white text-center py-10 px-4">
+        <div class="footer-content max-w-7xl mx-auto">
+            <h3 class="text-2xl font-bold mb-3">KiddleLamp Learning Center</h3>
+            <p class="text-sm opacity-90 mb-1">Inspiring young minds with creativity, knowledge, and joy in learning.</p>
+            <p class="tagline text-xs italic opacity-70 mb-4">Empowering tomorrow’s leaders today!</p>
+            <p class="copyright text-xs opacity-60">© 2025 KiddleLamp Learning Center. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger toggle logic
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active-nav');
+        });
+
+        // Dropdown toggle logic
+        const dropdown = document.querySelector('.dropdown');
+        const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+
+        // Toggle dropdown on click/tap for mobile
+        dropdownToggle.addEventListener('click', function(e) {
+            if (window.innerWidth < 768) {
+                e.preventDefault();
+                dropdownMenu.classList.toggle('show');
+            }
+        });
+
+        // Close dropdown if clicking outside (Mobile/Tablet only)
+        document.addEventListener('click', function(e) {
+            if (dropdown && !dropdown.contains(e.target) && window.innerWidth < 768) {
+                dropdownMenu.classList.remove('show');
+            }
+            // Also close the main nav if clicking outside when open
+            if (navLinks.classList.contains('active-nav') && !navLinks.contains(e.target) && e.target !== hamburger) {
+                navLinks.classList.remove('active-nav');
+            }
+        });
+    </script>
+</body>
+</html>

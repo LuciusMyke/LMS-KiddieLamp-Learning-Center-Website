@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events and Activities | KiddleLamp Learning Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <style>
+        /* Custom Configuration for Colors (Matching your CSS variables) */
+        :root {
+            --primary-color: #5d4a94; /* Primary Purple */
+            --secondary-color: #3a2b5e; /* Dark Purple */
+            --dark-bg-color: #3a4768; /* Navy Blue Footer */
+        }
+        
+        /* Apply custom colors to Tailwind */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'kl-primary': 'var(--primary-color)',
+                        'kl-secondary': 'var(--secondary-color)',
+                        'kl-dark-bg': 'var(--dark-bg-color)',
+                        'kl-light-bg': '#f7f7f7',
+                        'kl-accent-green': '#4CAF50', /* For Nutrition theme */
+                        'kl-accent-blue': '#2196F3', /* For Science/Test theme */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+        
+        /* --- General Overrides --- */
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* --- Navigation Custom Styles for Mobile --- */
+        /* Hides the desktop nav by default on small screens */
+        .main-nav { display: none; }
+        
+        /* Makes the navigation block visible when the hamburger is clicked */
+        .main-nav.active-nav {
+            display: block;
+            position: absolute; /* Allows it to flow over content */
+            top: 68px; /* Height of the header */
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 40; /* Lower than header z-50 */
+        }
+        
+        /* Removes default list styling */
+        .main-nav ul { list-style: none; }
+
+        /* Styling for the active sub-link (Events) */
+        .dropdown-menu a.active-sub {
+            background-color: var(--primary-color);
+            font-weight: bold;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .main-nav ul { 
+                flex-direction: column; 
+                gap: 0;
+                padding: 0; /* Remove padding */
+            }
+            .main-nav li { 
+                width: 100%; 
+                border-bottom: 1px solid #eee; 
+            }
+            .main-nav li:last-child {
+                border-bottom: none; /* Clean up last item */
+            }
+            .main-nav a { 
+                padding: 12px 15px; 
+                width: 100%; 
+                display: block;
+                /* Reset desktop border styles for mobile */
+                border-bottom: none !important; 
+            }
+            
+            /* Mobile Active Nav Style (Box) */
+            .main-nav a.active { 
+                background-color: var(--kl-light-bg); 
+                color: var(--kl-primary);
+                border-left: 4px solid var(--primary-color) !important; /* Visual indicator */
+                font-weight: bold;
+            }
+            
+            /* Mobile Dropdown */
+            .dropdown-menu { 
+                position: relative; 
+                width: 100%;
+                background-color: #fff;
+                box-shadow: none;
+                padding: 0;
+            }
+            .dropdown-menu li a {
+                color: #555;
+                background-color: #fafafa;
+                padding-left: 35px;
+                border-bottom: 1px dashed #eee;
+            }
+            .dropdown-menu li a:hover {
+                background-color: #eee;
+                color: var(--primary-color);
+            }
+            /* Override the light background for active sub-link on mobile */
+            .dropdown-menu a.active-sub {
+                background-color: var(--primary-color);
+                color: white;
+            }
+            .dropdown:hover .dropdown-menu, .dropdown-menu.show { 
+                display: block !important; 
+                opacity: 1 !important; 
+                transform: none !important; 
+            }
+        }
+          /* --- General Overrides --- */
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* --- Navigation Custom Styles for Mobile --- */
+        /* Hides the desktop nav by default on small screens */
+        .main-nav { 
+            display: none; 
+            /* Added for smooth scrolling when jumping to sections */
+            scroll-behavior: smooth;
+        }
+        
+        /* Makes the navigation block visible when the hamburger is clicked */
+        .main-nav.active-nav {
+            display: block;
+            position: absolute; /* Allows it to flow over content */
+            top: 68px; /* Height of the header */
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 40; /* Lower than header z-50 */
+        }
+        
+        /* Removes default list styling */
+        .main-nav ul { list-style: none; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .main-nav ul { 
+                flex-direction: column; 
+                gap: 0;
+                padding: 0; /* Remove padding */
+            }
+            .main-nav li { 
+                width: 100%; 
+                border-bottom: 1px solid #eee; 
+            }
+            .main-nav li:last-child {
+                border-bottom: none; /* Clean up last item */
+            }
+            .main-nav a { 
+                padding: 12px 15px; 
+                width: 100%; 
+                display: block;
+                border-bottom: none !important; 
+            }
+            
+            /* Mobile Active Nav Style (Box) */
+            .main-nav a.active { 
+                background-color: var(--kl-light-bg); 
+                color: var(--kl-primary);
+                border-left: 4px solid var(--primary-color) !important; /* Visual indicator */
+                font-weight: bold;
+            }
+            
+            /* Mobile Dropdown */
+            .dropdown-menu { 
+                position: relative; 
+                width: 100%;
+                background-color: #fff;
+                box-shadow: none;
+                padding: 0;
+                display: none; /* Hidden by default on mobile */
+                border-top: 1px solid #eee;
+            }
+            /* Show dropdown menu when 'show' class is added by JS */
+            .dropdown-menu.show {
+                display: block !important;
+            }
+
+            .dropdown-menu li a {
+                color: #555;
+                background-color: #fafafa;
+                padding-left: 35px;
+                border-bottom: 1px dashed #eee;
+            }
+            .dropdown-menu li a:hover {
+                background-color: #eee;
+                color: var(--primary-color);
+            }
+            /* Ensure dropdown item does not have border on mobile */
+            .dropdown-item {
+                border-bottom: 1px solid #eee; 
+            }
+            .dropdown-item:last-child {
+                border-bottom: none;
+            }
+        }
+        /* Desktop Dropdown Styles */
+        @media (min-width: 769px) {
+            .dropdown:hover .dropdown-menu {
+                display: block;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                background-color: white;
+                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+                z-index: 50;
+                min-width: 160px;
+                padding: 0;
+                margin-top: 2px;
+                border-radius: 4px;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            .dropdown-menu a {
+                padding: 10px 15px;
+                white-space: nowrap;
+                color: #333;
+                text-align: left;
+            }
+            .dropdown-menu a:hover {
+                background-color: #f1f1f1;
+                color: var(--primary-color);
+            }
+            .dropdown:hover .dropdown-btn {
+                color: var(--primary-color);
+                border-bottom-color: var(--primary-color);
+            }
+        }
+        .main-footer {
+    background-color: var(--dark-bg-color);
+    color: var(--light-text);
+    text-align: center;
+    padding: 40px 5%;
+    margin-top: 40px;
+}
+
+.footer-content h3 {
+    color: var(--light-text);
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.footer-content .copyright {
+    margin-top: 20px;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.footer-content .tagline {
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+    </style>
+</head>
+<body class="bg-white font-sans text-gray-800">
+
+    <header class="main-header sticky top-0 z-50 bg-white shadow-lg flex justify-center">
+        <div class="w-full max-w-7xl flex justify-between items-center p-4 md:px-8">
+            <div class="logo-container flex items-center flex-wrap">
+                <!-- Using a standard placeholder image to avoid broken links -->
+                <img src="./assets/logo.jfif" alt="KiddleLamp Learning Center Logo" class="w-12 h-12 rounded-full shadow-md"> 
+                <span class="site-title text-base font-extrabold text-kl-secondary ml-3 leading-tight">
+                    KiddleLamp <br> Learning Center
+                </span>
+            </div>
+
+            <div class="hamburger md:hidden cursor-pointer text-xl text-kl-secondary" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <nav class="main-nav hidden md:block" id="nav-links">
+                <ul class="flex md:space-x-8 lg:space-x-12">
+                    <!-- Home is NOT active -->
+                    <li><a href="index.html" class="text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                        <i class="fas fa-home mr-1"></i> Home
+                    </a></li>
+                    <!-- About Us is NOT active -->
+                    <li><a href="aboutus.html" class="text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                        <i class="fas fa-info-circle mr-1"></i> About Us
+                    </a></li>
+                    <li><a href="contact.html" class="text-gray-600 hover:text-kl-primary flex items-center py-2 hover:border-b-2 hover:border-kl-primary transition duration-200 border-b-2 border-transparent">
+                        <i class="fas fa-envelope mr-1"></i> Contact
+                    </a></li>
+                    <!-- More (Dropdown) IS active because 'Events' is the current page -->
+                    <li class="dropdown relative">
+                        <a href="#" class="dropdown-toggle active text-kl-primary font-semibold flex items-center py-2 border-b-2 border-kl-primary transition duration-200">
+                            <i class="fas fa-ellipsis-h mr-1"></i> More <i class="fas fa-caret-down ml-1 text-sm"></i>
+                        </a>
+                        <ul class="dropdown-menu absolute hidden min-w-[150px] bg-kl-secondary rounded-lg shadow-xl overflow-hidden py-1">
+                            <!-- Events is the active sub-link -->
+                            <li><a href="event.html" class="active-sub text-white hover:bg-kl-primary px-4 py-2 block transition duration-200">Events</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-8">
+        
+        <div class="py-10 text-center">
+            <h1 class="text-5xl font-extrabold text-kl-secondary">School Events & Milestones</h1>
+            <p class="text-xl text-gray-500 mt-2">A look back at our recent activities and a preview of what's to come!</p>
+        </div>
+
+        <!-- SECTION 1: JULY - NUTRITION MONTH (Gallery Showcase Layout) -->
+        <section id="july-event" class="py-16 bg-kl-accent-green/5 rounded-3xl shadow-lg border-b-4 border-kl-accent-green mb-16">
+            <div class="text-center mb-10">
+                <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-kl-accent-green text-white mb-2">JULY 31</span>
+                <h2 class="text-4xl font-extrabold text-kl-secondary mb-3">Nutrition Month Celebration</h2>
+                <h3 class="text-xl italic text-gray-700 max-w-4xl mx-auto leading-snug">
+                    "FOOD at Nutrsyon Security, Maging Priority! Sapat na Pagkain, Karapatan Natin!"
+                </h3>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-8 items-center p-4">
+                <div class="lg:w-1/2 p-4">
+                    <p class="text-lg text-gray-700 leading-relaxed mb-4 border-l-4 border-kl-accent-green pl-4">
+                        Our Nutrition Month was a fun and educational campaign focused on **food security and the right to sufficient nourishment**. Students engaged in exciting activities, from cooking demonstrations and healthy lunch challenges to art contests promoting local and nutritious produce. It was a vibrant day dedicated to teaching children the importance of making healthy choices for a strong future.
+                    </p>
+                    <p class="text-sm italic text-gray-500 mt-2">
+                        Activities covered 8 different stations, including games and interactive learning.
+                    </p>
+                </div>
+                
+                <div class="lg:w-1/2 grid grid-cols-2 gap-4">
+                    <div class="col-span-2 relative h-64 overflow-hidden rounded-xl shadow-xl">
+                        <img src="./assets/kn1.jpg" alt="Nutrition Month main activity" 
+                             class="w-full h-full object-cover transition duration-500 hover:scale-[1.05]"
+                             onerror="this.onerror=null; this.src='https://placehold.co/800x400/5d4a94/ffffff?text=KN1+Nutrition+Main';">
+                    </div>
+                    <div class="relative h-40 overflow-hidden rounded-xl shadow-lg">
+                        <img src="./assets/kn4.jpg" alt="Kids eating healthy snacks" 
+                             class="w-full h-full object-cover"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x300/3a2b5e/ffffff?text=KN4+Healthy+Food';">
+                    </div>
+                    <div class="relative h-40 overflow-hidden rounded-xl shadow-lg">
+                        <img src="./assets/kn8.jpg" alt="Nutrition poster making contest" 
+                             class="w-full h-full object-cover"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x300/5d4a94/ffffff?text=KN8+Poster+Art';">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: AUGUST - SUMMATIVE TEST & BUWAN NG WIKA (Alternating Focus Layout) -->
+        <section id="august-event" class="py-16 bg-white my-16">
+            <div class="text-center mb-10">
+                <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-500 text-white mb-2">AUGUST</span>
+                <h2 class="text-4xl font-extrabold text-kl-secondary mb-3">Summative Test & Buwan ng Wika</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Academic Focus (Test) -->
+                <div class="bg-kl-light-bg p-8 rounded-2xl shadow-xl border-l-4 border-yellow-500">
+                    <i class="fas fa-pencil-alt text-4xl text-yellow-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-kl-secondary mb-3">Academic Excellence: Summative Test</h3>
+                    <p class="text-gray-700 mb-4">
+                        The Summative Test phase was a crucial time for students to **assess their learning and retention** from the past module. Our teachers ensured a calm and supportive testing environment, helping students approach the exams with confidence. The results guided our personalized learning plans for the upcoming weeks.
+                    </p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <img src="./assets/st1.jpg" alt="Students taking test" class="w-full h-20 object-cover rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/200x80/fcd34d/333?text=ST1';">
+                        <img src="./assets/st3.jpg" alt="Teachers checking paper" class="w-full h-20 object-cover rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/200x80/fcd34d/333?text=ST3';">
+                        <img src="./assets/st10.jpg" alt="Study materials" class="w-full h-20 object-cover rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/200x80/fcd34d/333?text=ST10';">
+                    </div>
+                </div>
+                
+                <!-- Cultural Focus (Wika) -->
+                <div class="bg-kl-light-bg p-8 rounded-2xl shadow-xl border-l-4 border-kl-primary">
+                    <i class="fas fa-comments text-4xl text-kl-primary mb-4"></i>
+                    <h3 class="text-2xl font-bold text-kl-secondary mb-3">Cultural Pride: Buwan ng Wika</h3>
+                    <p class="text-gray-700 mb-4">
+                        Simultaneously, we celebrated **Buwan ng Wika (National Language Month)** with immense pride. Students dressed in traditional Filipino attire, recited poetry, and performed folk dances. This event reinforced the appreciation for our rich heritage and the importance of the Filipino language in national identity.
+                    </p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <img src="./assets/st5.jpg" alt="Buwan ng Wika performers" class="w-full h-20 object-cover rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/200x80/5d4a94/fff?text=ST5';">
+                        <img src="./assets/st7.jpg" alt="Filipino food display" class="w-full h-20 object-cover rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/200x80/5d4a94/fff?text=ST7';">
+                        <img src="./assets/st9.jpg" alt="Traditional games" class="w-full h-20 object-cover rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/200x80/5d4a94/fff?text=ST9';">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: SEPTEMBER - PERIODICAL TEST & SCIENCE WEEK (Clean Scientific Layout) -->
+        <section id="september-event" class="py-16 bg-kl-accent-blue/10 rounded-3xl shadow-xl border-r-4 border-kl-accent-blue mb-16">
+            <div class="flex flex-col md:flex-row items-stretch gap-10 p-4">
+                
+                <div class="md:w-1/3 flex flex-col gap-4">
+                    <div class="relative h-48 overflow-hidden rounded-xl shadow-lg">
+                        <img src="./assets/pt1.jpg" alt="Kids performing science experiment" 
+                             class="w-full h-full object-cover"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x300/2196F3/ffffff?text=PT1+Experiment';">
+                    </div>
+                    <div class="relative h-48 overflow-hidden rounded-xl shadow-lg">
+                        <img src="./assets/pt3.jpg" alt="Microscope view" 
+                             class="w-full h-full object-cover"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x300/2196F3/ffffff?text=PT3+Inquiry';">
+                    </div>
+                </div>
+
+                <div class="md:w-2/3 p-4">
+                    <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-kl-accent-blue text-white mb-2">SEPTEMBER</span>
+                    <h2 class="text-4xl font-extrabold text-kl-secondary mb-3">1st Periodical Test & Science Week</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                        September was a blend of **academic assessment and scientific exploration**. Following the 1st Periodical Test, which reviewed the foundational concepts of the first quarter, we launched Science Week! This event featured interactive stations, engaging experiments, and guest speakers who sparked curiosity about the natural world and technology among our young learners.
+                    </p>
+                    <ul class="list-disc list-inside text-gray-600 space-y-1 ml-4">
+                        <li>The test covered all core subjects for the period.</li>
+                        <li>Science Week promoted hands-on STEM skills.</li>
+                        <li>Students presented their self-made projects on environmental topics.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: OCTOBER - SUMMATIVE TEST & UNITED NATION (Global Banner Layout) -->
+        <section id="october-event" class="py-16 bg-white my-16">
+            <div class="bg-gray-800 rounded-3xl overflow-hidden shadow-2xl">
+                <div class="relative h-64 md:h-80 w-full">
+                    <!-- Global Banner Placeholder -->
+                    <img src="./assets/un1.jpg" alt="United Nations flags and students" 
+                         class="w-full h-full object-cover opacity-50"
+                         onerror="this.onerror=null; this.src='https://placehold.co/1400x500/007FFF/ffffff?text=UN+Celebration+Banner';">
+                    
+                    <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-6 text-white">
+                        <span class="inline-block px-4 py-1 text-sm font-semibold rounded-full bg-red-600 mb-3">OCTOBER</span>
+                        <h2 class="text-4xl md:text-5xl font-extrabold mb-3 leading-tight tracking-wide">United Nations Day</h2>
+                        <p class="text-xl max-w-2xl font-light">
+                            Celebrating global diversity and promoting peace and understanding among nations.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="p-8 md:p-12 text-gray-200">
+                    <h3 class="text-2xl font-bold text-kl-primary mb-3">Assessment and Awareness</h3>
+                    <p class="mb-4">
+                        October saw our students complete their Summative Test before diving into a celebration of **cultural diversity for United Nations Day**. Students researched and presented various countries, wearing national costumes, and learning about geography and global citizenship.
+                    </p>
+                    <div class="grid grid-cols-3 gap-4">
+                        <img src="./assets/un3.jpg" alt="Kids in national costumes" class="w-full h-24 object-cover rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/300x100/3a2b5e/fff?text=UN3+Costumes';">
+                        <img src="./assets/un5.jpg" alt="UN Flag display" class="w-full h-24 object-cover rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/300x100/5d4a94/fff?text=UN5+Flags';">
+                        <img src="./assets/un2.jpg" alt="Global map activity" class="w-full h-24 object-cover rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/300x100/3a2b5e/fff?text=UN2+Map';">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: UPCOMING EVENTS (Timeline Style) -->
+        <section id="upcoming-events" class="py-16 bg-kl-light-bg rounded-3xl shadow-inner my-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-kl-primary border-b-4 border-kl-secondary inline-block pb-1">Upcoming Events Calendar</h2>
+                <p class="text-lg text-gray-700 max-w-4xl mx-auto mt-4">
+                    Mark your calendars! Here's a glimpse of the exciting activities and important dates ahead for our KiddleLamp community.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-8">
+                <!-- November -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 flex items-center justify-center bg-yellow-500 rounded-full text-white font-bold flex-shrink-0">NOV</div>
+                    <div class="bg-white p-5 rounded-xl shadow-lg w-full transition transform hover:scale-[1.01] border-l-4 border-yellow-500">
+                        <h3 class="font-bold text-xl text-kl-secondary">November</h3>
+                        <p class="text-gray-600 mt-1">
+                            **2nd Periodical Test** (Academic focus) and **Halloween event / Scouting (BSP & GSP)** activities.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- December -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 flex items-center justify-center bg-red-600 rounded-full text-white font-bold flex-shrink-0">DEC</div>
+                    <div class="bg-white p-5 rounded-xl shadow-lg w-full transition transform hover:scale-[1.01] border-l-4 border-red-600">
+                        <h3 class="font-bold text-xl text-kl-secondary">December</h3>
+                        <p class="text-gray-600 mt-1">
+                            **Achievement Test**, **Field Trip**, and the grand **Christmas Party** celebration.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- January -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 flex items-center justify-center bg-kl-accent-blue rounded-full text-white font-bold flex-shrink-0">JAN</div>
+                    <div class="bg-white p-5 rounded-xl shadow-lg w-full transition transform hover:scale-[1.01] border-l-4 border-kl-accent-blue">
+                        <h3 class="font-bold text-xl text-kl-secondary">January</h3>
+                        <p class="text-gray-600 mt-1">
+                            **3rd Periodical Test** to start the new year right.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- February -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 flex items-center justify-center bg-pink-500 rounded-full text-white font-bold flex-shrink-0">FEB</div>
+                    <div class="bg-white p-5 rounded-xl shadow-lg w-full transition transform hover:scale-[1.01] border-l-4 border-pink-500">
+                        <h3 class="font-bold text-xl text-kl-secondary">February</h3>
+                        <p class="text-gray-600 mt-1">
+                            **Valentine's Day** celebration, **Quiz Bee** academic challenge, and **Family Day**.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- March -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 flex items-center justify-center bg-kl-accent-green rounded-full text-white font-bold flex-shrink-0">MAR</div>
+                    <div class="bg-white p-5 rounded-xl shadow-lg w-full transition transform hover:scale-[1.01] border-l-4 border-kl-accent-green">
+                        <h3 class="font-bold text-xl text-kl-secondary">March</h3>
+                        <p class="text-gray-600 mt-1">
+                            **Summative Test**, **Class Picture** day, and **Toga Picture** taking.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- April -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 flex items-center justify-center bg-kl-primary rounded-full text-white font-bold flex-shrink-0">APR</div>
+                    <div class="bg-white p-5 rounded-xl shadow-lg w-full transition transform hover:scale-[1.01] border-l-4 border-kl-primary">
+                        <h3 class="font-bold text-xl text-kl-secondary">April</h3>
+                        <p class="text-gray-600 mt-1">
+                            **4th Periodical Test**, **Graduation**, and **Recognition Day** ceremonies.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+    </main>
+
+    <footer class="main-footer bg-kl-dark-bg w-full text-white text-center py-10 px-4">
+        <div class="footer-content max-w-7xl mx-auto">
+            <h3 class="text-2xl font-bold mb-3">KiddleLamp Learning Center</h3>
+            <p class="text-sm opacity-90 mb-1">Inspiring young minds with creativity, knowledge, and joy in learning.</p>
+            <p class="tagline text-xs italic opacity-70 mb-4">Empowering tomorrow’s leaders today!</p>
+            <p class="copyright text-xs opacity-60">© 2025 KiddleLamp Learning Center. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active-nav');
+        });
+
+        // Dropdown toggle
+        const dropdown = document.querySelector('.dropdown');
+        const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+
+        // Toggle dropdown on click/tap for mobile, only prevent default for small screens
+        dropdownToggle.addEventListener('click', function(e) {
+            if (window.innerWidth < 768) {
+                e.preventDefault();
+                dropdownMenu.classList.toggle('show');
+            }
+        });
+
+        // Close dropdown if clicking outside (Mobile/Tablet only)
+        document.addEventListener('click', function(e) {
+            if (dropdown && !dropdown.contains(e.target) && window.innerWidth < 768) {
+                dropdownMenu.classList.remove('show');
+            }
+            // Also close the main nav if clicking outside when open
+            if (navLinks.classList.contains('active-nav') && !navLinks.contains(e.target) && e.target !== hamburger) {
+                navLinks.classList.remove('active-nav');
+            }
+        });
+    </script>
+</body>
+</html>
